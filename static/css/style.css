@@ -1,0 +1,301 @@
+/* ==========================================================================
+   MotionMaestro project page: brand tokens and page components.
+   The shared components (layout, nav, hero, section heads, figures, tabs,
+   chip pickers, tables, disclosures, key points, lightbox, BibTeX, footer)
+   are in family.css, which this file follows. Brand: ink #1C2738 and
+   MotionMaestro orange #F4661B; the paper's colour language for motion
+   stays: orange = provided condition, blue = generated motion.
+   ========================================================================== */
+
+/* ---------- 1. Brand tokens ---------------------------------------------- */
+:root {
+  --accent: #F4661B;           /* MotionMaestro orange (logo "Maestro"): rules, borders, large text */
+  --accent-text: #C2410C;      /* small orange text, white-on-orange fills (5.2:1 on white) */
+  --accent-strong: #9A3412;    /* hover */
+  --accent-soft: #FEF1E8;      /* tinted fills */
+  --accent-line: #FAD2BA;      /* tinted borders */
+  --logo-k: 1.7852;            /* hero logo height factor (wordmark = GeoSET wordmark) */
+
+  /* the paper's motion colours: orange = provided condition, blue = generated */
+  --cond: #E2711D;
+  --cond-ink: #A9520F;
+  --cond-50: #FDF2E9;
+  --cond-100: #F8DCC4;
+  --gen: #1F6FB2;
+  --gen-ink: #185C94;
+  --gen-50: #EDF4FB;
+  --gen-100: #D5E5F4;
+}
+
+.hl-cond { color: var(--cond-ink); font-weight: 600; }
+.hl-gen { color: var(--gen-ink); font-weight: 600; }
+
+/* ---------- 2. Hero logo: "Mae" = Masked AutoEncoder --------------------- */
+/* The logo is inline SVG with a token grid over "Mae" (#FFD7B5, the logo's masked-token colour). Its resting
+   state is half reconstructed: the .mae-keep cells stay masked and the grid stays. With JS, "Mae" is fully
+   masked from the first frame; once the logo is on screen (main.js adds .mae-go), the other half of the tokens
+   disappear in a fixed pseudo-random order after a short hold (per-cell delay --d, ~1.5 s in total) and the
+   brace + label fade in. Hovering or clicking the logo replays it. Reduced motion or no JS (no .js class on
+   <html>): the resting state, no animation. The label is drawn here, not in the SVG, so it is
+   not part of the page title's text; it sits under "Mae" (x = 1437, baseline y = 478 of the SVG viewBox). */
+.hero-logo-mae { position: relative; display: block; }
+.hero-logo-mae::after {
+  content: "Masked AutoEncoder"; content: "Masked AutoEncoder" / "";
+  position: absolute; left: 67.672%; top: 89.998%;
+  transform: translate(-50%, -.94em);
+  font: 600 calc(var(--logo-h) * .1001)/1 var(--font-display);
+  letter-spacing: .0192em; color: #5B6577; white-space: nowrap; pointer-events: none;
+}
+/* phones: at least 60 SVG units, so the label stays legible */
+@media (max-width: 480px) { .hero-logo-mae::after { font-size: calc(var(--logo-h) * .1194); } }
+.mae-cell:not(.mae-keep) { opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .js .mae-cell:not(.mae-keep) { opacity: 1; }
+  .js .mae-note, .js .hero-logo-mae::after { opacity: 0; }
+  .js.mae-go .mae-cell:not(.mae-keep) { animation: mae-out .2s ease-out calc(.35s + var(--d, 0s) * 1.25) both; }
+  .js.mae-go .mae-note, .js.mae-go .hero-logo-mae::after { animation: mae-in .4s ease-out 1.3s both; }
+  .js .hero-logo-mae { cursor: default; }
+}
+@keyframes mae-out { to { opacity: 0; } }
+@keyframes mae-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---------- 3. Headline gallery (nine-task clips + dataset strip) -------- */
+.hero-gallery .carousel-nav { margin: 16px 0 0; }
+.thumbs--hero .thumb { flex-basis: 164px; }
+@media (max-width: 640px) { .thumbs--hero .thumb { flex-basis: 148px; } }
+.vcard--hero .vcard-head { border-bottom: 0; border-top: 1px solid var(--border); }
+.section--headline .note { margin-top: 12px; }
+
+/* ---------- 4. Colour legend chips, "given" text ------------------------- */
+.legend { display: inline-flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 11px 4px 7px; border-radius: var(--radius-pill);
+  font-size: .82rem; font-weight: 600; line-height: 1.2; border: 1px solid;
+  white-space: nowrap;
+}
+.chip svg { width: 16px; height: 16px; flex: none; }
+.chip--cond { background: var(--cond-50); border-color: var(--cond-100); color: var(--cond-ink); }
+.chip--cond svg { color: var(--cond); }
+.chip--gen { background: var(--gen-50); border-color: var(--gen-100); color: var(--gen-ink); }
+.chip--gen svg { color: var(--gen); }
+@media (max-width: 640px) {
+  .chip { font-size: .76rem; gap: 4px; padding: 3px 9px 3px 5px; }
+  .chip svg { width: 14px; height: 14px; }
+}
+.given { color: var(--cond-ink); font-size: .95rem; font-weight: 500; }
+.given::before { content: "given: "; font-style: italic; opacity: .85; }
+
+/* ---------- 5. Notes under a gallery ------------------------------------- */
+.note {
+  margin: 16px auto 0; max-width: 112ch; text-align: center;
+  font-size: .875rem; line-height: 1.55; color: var(--muted);
+}
+
+/* ---------- 6. Video card ------------------------------------------------ */
+.vcard {
+  position: relative;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.vcard + .vcard { margin-top: 22px; }
+.vcard-head { padding: 11px 16px; border-bottom: 1px solid var(--border); }
+/* the text prompt is burned into every clip; the HTML copy is for narrow screens, where that text is small */
+@media (min-width: 900px) { .vcard-head { display: none; } }
+.vcard-prompt {
+  margin: 0; padding-left: 12px;
+  border-left: 3px solid var(--cond);
+  font-size: 1rem; line-height: 1.5; color: var(--ink);
+}
+.vcard-prompt::before { content: "\201C"; }
+.vcard-prompt::after { content: "\201D"; }
+
+.vcard-media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #fff;
+  cursor: zoom-in;
+}
+.vcard-media video {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: contain; background: transparent;
+}
+/* spinner while a clip buffers */
+.vcard-media::after {
+  content: ""; position: absolute; left: 50%; top: 50%;
+  width: 34px; height: 34px; margin: -17px 0 0 -17px;
+  border-radius: 50%;
+  border: 3px solid rgba(28, 39, 56, .14); border-top-color: var(--accent);
+  opacity: 0; pointer-events: none; transition: opacity .2s;
+}
+.vcard.is-loading .vcard-media::after { opacity: 1; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* big play button: shown when the viewer paused or reduced motion is on */
+.vcard-play {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: 68px; height: 68px; border-radius: 50%;
+  display: none; align-items: center; justify-content: center;
+  background: rgba(28, 39, 56, .74); color: #fff;
+  box-shadow: 0 8px 24px rgba(28, 39, 56, .3);
+  transition: background-color .15s, transform .15s;
+}
+.vcard-play svg { width: 28px; height: 28px; margin-left: 3px; }
+.vcard-play:hover { background: var(--ink); transform: translate(-50%, -50%) scale(1.05); }
+.vcard.is-held:not(.is-playing) .vcard-play { display: flex; }
+
+.vcard-bar {
+  display: flex; align-items: center; gap: 6px 12px; flex-wrap: wrap;
+  padding: 7px 10px 7px 16px;
+  border-top: 1px solid var(--border);
+}
+.vcard-caption { flex: 1 1 260px; min-width: 0; margin: 0; font-size: .875rem; line-height: 1.45; color: var(--muted); }
+.vcard-caption strong { color: var(--ink); font-weight: 600; }
+.vcard-tools { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+.vcard-bar .legend { flex: none; }
+
+.tool-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 32px; padding: 0 11px; border-radius: var(--radius-pill);
+  font-size: .8438rem; font-weight: 600; color: var(--muted);
+  transition: background-color .15s, color .15s;
+}
+.tool-btn svg { width: 16px; height: 16px; flex: none; }
+.tool-btn:hover { background: var(--bg-sunken); color: var(--ink); }
+.tool-btn .i-pause { display: none; }
+.vcard.is-playing .tool-btn .i-pause { display: block; }
+.vcard.is-playing .tool-btn .i-play { display: none; }
+
+.speed {
+  display: inline-flex; padding: 2px; gap: 2px;
+  border: 1px solid var(--border); border-radius: var(--radius-pill); background: var(--bg);
+}
+.speed button {
+  height: 26px; min-width: 38px; padding: 0 8px; border-radius: var(--radius-pill);
+  font: 600 .78rem/1 var(--font-mono); color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.speed button:hover { color: var(--ink); }
+.speed button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+
+/* method-name strip above the 5-panel comparison clips (narrow screens only:
+   the burned-in column titles are legible on wide screens) */
+.vcard-cols {
+  display: grid; grid-template-columns: repeat(var(--cols, 5), minmax(0, 1fr));
+  background: var(--bg-band);
+}
+.vcard-cols > div { padding: 8px 4px; text-align: center; min-width: 0; border-left: 1px solid var(--border); }
+.vcard-cols > div:first-child { border-left: 0; }
+.vcard-cols .m { display: block; font-size: .84rem; font-weight: 600; color: var(--text-2); line-height: 1.25; overflow-wrap: anywhere; }
+.vcard-cols .v { display: block; margin-top: 2px; font: 600 .74rem/1.2 var(--font-sans); color: var(--muted); }
+.vcard-cols .is-ours { background: var(--accent-soft); }
+.vcard-cols .is-ours .m { color: var(--accent-text); font-weight: 700; }
+.vcard-cols .is-ref .m { color: var(--muted); }
+.vcard-cols .short { display: none; }
+.vcard-cols--names { border-bottom: 1px solid var(--border); }
+@media (min-width: 900px) { .vcard-cols--names { display: none; } }
+@media (max-width: 640px) {
+  .vcard-cols .long { display: none; }
+  .vcard-cols .short { display: inline; }
+  .vcard-cols--names > div { padding: 8px 1px; }
+  .vcard-cols--names .m { font-size: .78rem; letter-spacing: -.01em; }
+}
+@media (max-width: 380px) { .vcard-cols--names .m { font-size: .74rem; } }
+
+/* baseline comparison: crop the empty white band under the burned-in metric line */
+.vcard-media--crop { aspect-ratio: 1280 / 594; }
+.vcard-media--crop.has-prompt { aspect-ratio: 1280 / 634; }
+.vcard-media--crop video { object-fit: cover; object-position: 50% 0; }
+
+@media (max-width: 640px) {
+  .vcard-head { padding: 10px 12px; }
+  .vcard-prompt { font-size: .95rem; }
+  .vcard-bar { padding: 6px 6px 6px 12px; }
+  .vcard-caption { flex-basis: 100%; order: 2; padding: 2px 4px 4px 0; font-size: .85rem; }
+  .vcard-tools { margin-left: 0; width: 100%; }
+  .vcard-tools [data-action="expand"] { margin-left: auto; }
+  .vcard-bar .legend { order: 3; padding-bottom: 4px; }
+  .tool-btn .lbl-optional { display: none; }
+}
+
+/* ---------- 7. Switchers: task picker, dataset rows, clip strips ---------- */
+/* horizontal scroller with edge fades (thumbnail strips; fade classes set by main.js) */
+.hscroll {
+  position: relative;
+  overflow-x: auto; overscroll-behavior-x: contain;
+  scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+}
+.hscroll::-webkit-scrollbar { display: none; }
+
+/* task picker: a 4 x 2 grid of chips on wide screens, one scrolling row on phones (family.css) */
+.task-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 200px)); justify-content: center; }
+@media (max-width: 720px) { .task-tabs { display: flex; justify-content: flex-start; } }
+.panel-intro { margin: 0 0 14px; text-align: center; font-size: .95rem; }
+.panel-intro .pnote { display: block; margin-top: 2px; font-size: .875rem; color: var(--muted); }
+/* wide screens: the "given" line is burned into each clip; only a clip note stays */
+@media (min-width: 900px) {
+  .panel-intro .given { display: none; }
+  .panel-intro:not(:has(.pnote)) { display: none; }
+}
+
+.switchbar {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 10px 16px; margin-bottom: 22px;
+}
+.switchbar--center { justify-content: center; }
+
+/* clip / figure strip: prev, thumbnails, next */
+.carousel-nav { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0 0 14px; }
+.carousel-nav .thumbs { flex: 0 1 auto; min-width: 0; }
+.thumbs { display: flex; gap: 10px; padding: 3px; scroll-padding-inline: 3px; }
+.thumb {
+  flex: 0 0 196px;
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 5px 5px 7px; border-radius: var(--radius); text-align: left;
+  background: var(--bg); border: 1px solid var(--border);
+  transition: border-color .15s, box-shadow .15s;
+  scroll-snap-align: start;
+}
+.thumb:hover { border-color: var(--border-strong); }
+.thumb img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius-s); background: var(--bg-sunken); }
+.thumb span {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  padding: 0 3px; font-size: .8rem; line-height: 1.35; color: var(--muted); font-weight: 500;
+}
+.thumb span b { color: var(--ink); font-weight: 700; margin-right: 2px; }
+.thumb[aria-selected="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+.thumbs--fig .thumb { flex-basis: 148px; }
+.thumbs--fig .thumb img { aspect-ratio: 480 / 205; object-fit: contain; background: #fff; border: 1px solid var(--border); }
+@media (max-width: 640px) {
+  .carousel-nav .carousel-btn { display: none; }
+  .thumb { flex: 0 0 148px; }
+  .thumbs--fig .thumb { flex-basis: 150px; }
+}
+
+/* ---------- 8. Video lightbox (family lightbox chrome) ------------------- */
+.lightbox--video .lb-stage video {
+  margin: auto; width: min(100%, calc((100dvh - 150px) * 16 / 9)); height: auto; aspect-ratio: 16 / 9;
+  background: #fff; border-radius: 6px;
+}
+.lightbox .speed { background: rgba(255, 255, 255, .06); border-color: rgba(255, 255, 255, .2); }
+.lightbox .speed button { height: 30px; color: rgba(255, 255, 255, .75); }
+.lightbox .speed button[aria-pressed="true"] { background: #fff; color: var(--ink); }
+.lb-hint { display: none; }
+@media (max-width: 640px) and (orientation: portrait) {
+  .lightbox--video .lb-hint { display: block; margin: 0 auto 12px; padding: 0 16px; font-size: .8rem; color: rgba(255, 255, 255, .6); text-align: center; }
+}
+
+/* ---------- 9. Touch input ----------------------------------------------- */
+@media (pointer: coarse) {
+  .vcard-tools .tool-btn, .speed button { min-height: 40px; }
+  .speed button { min-width: 44px; }
+}
+
+/* ---------- 10. Print ---------------------------------------------------- */
+@media print {
+  .topnav, .vcard-bar, .vcard-play, .copy-btn, .carousel-nav .carousel-btn, .skip-link { display: none !important; }
+  .section { padding-block: 24px; }
+}
