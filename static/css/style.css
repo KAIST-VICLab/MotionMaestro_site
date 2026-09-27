@@ -58,10 +58,16 @@
 }
 @keyframes mae-out { to { opacity: 0; } }
 @keyframes mae-in { from { opacity: 0; } to { opacity: 1; } }
+/* phones: three authors keep one line (the family gap of 22px left "Jeonghyeok Do" alone on line 2 at 390-430 px) */
+@media (max-width: 480px) { .hero-authors { column-gap: 14px; } }
+
+/* section leads: balanced lines (a two-word last line such as "per dataset." otherwise sits alone) */
+.section-head .lead { text-wrap: balance; }
 
 /* ---------- 3. Headline gallery (nine-task clips + dataset strip) -------- */
 .hero-gallery .carousel-nav { margin: 16px 0 0; }
 .thumbs--hero .thumb { flex-basis: 164px; }
+.thumbs--hero .thumb span b { display: block; }   /* dataset name above the one-line clip name */
 @media (max-width: 640px) { .thumbs--hero .thumb { flex-basis: 148px; } }
 .vcard--hero .vcard-head { border-bottom: 0; border-top: 1px solid var(--border); }
 .section--headline .note { margin-top: 12px; }
@@ -246,6 +252,8 @@
   gap: 10px 16px; margin-bottom: 22px;
 }
 .switchbar--center { justify-content: center; }
+/* comparison: Example 1 / Example 2 under the task picker, one clip at a time */
+.switchbar--ex { margin-bottom: 14px; }
 
 /* clip / figure strip: prev, thumbnails, next */
 .carousel-nav { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0 0 14px; }
@@ -283,6 +291,7 @@
 .lightbox .speed { background: rgba(255, 255, 255, .06); border-color: rgba(255, 255, 255, .2); }
 .lightbox .speed button { height: 30px; color: rgba(255, 255, 255, .75); }
 .lightbox .speed button[aria-pressed="true"] { background: #fff; color: var(--ink); }
+.lightbox--video .lb-caption { text-align: center; }
 .lb-hint { display: none; }
 @media (max-width: 640px) and (orientation: portrait) {
   .lightbox--video .lb-hint { display: block; margin: 0 auto 12px; padding: 0 16px; font-size: .8rem; color: rgba(255, 255, 255, .6); text-align: center; }
@@ -292,6 +301,7 @@
 @media (pointer: coarse) {
   .vcard-tools .tool-btn, .speed button { min-height: 40px; }
   .speed button { min-width: 44px; }
+  .vcard-tools .tool-btn { min-width: 44px; justify-content: center; }
 }
 
 /* ---------- 10. Print ---------------------------------------------------- */

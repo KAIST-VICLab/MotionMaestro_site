@@ -23,27 +23,31 @@ python3 -m http.server 8000
 
 ```
 index.html                the page (results first: the nine-task clips, baseline comparison, stride and body-part clips, paper figures, quantitative results, then a compact method overview)
-static/css/family.css     styles shared with the GeoSET, GeoCR and MotionMaestro pages (the same file on all three)
+static/css/family.css     styles shared by every page in the KAIST-VICLab project-page family (the same file on each)
 static/js/family.js       scripts shared with those pages: navigation, abstract toggle, pending links, BibTeX copy,
                           image lightbox, tabs, table scroll cues
 static/css/style.css      MotionMaestro brand colours (top of the file), the logo animation and the video cards and clip strips
 static/js/main.js         video cards (loaded and played only when on screen), clip and figure strips, video lightbox
-static/images/            figures (web size + *_full.* for the lightbox), og.jpg (social preview) and the icon files
+static/images/            paper figures (*_1200.jpg and the 2000 px *.jpg are inline, *_full.* open in the lightbox),
+                          og.jpg (social preview) and the icon files
 static/videos/<category>/ 34 demo videos (unified, baseline, stride, bodypart) with posters and thumbnails
+static/paper/MotionMaestro.pdf  the paper (PDF), opened by the Paper button and the navigation bar's Paper link
 ```
 
 ## Logo
 
 The MotionMaestro logo is included: it is the hero title, inlined as SVG in `index.html`. There a brace marks "Mae" as
-Masked AutoEncoder (the label is drawn by `style.css`) and "Mae" is rebuilt from masked tokens once on load; with reduced
-motion or without JavaScript the logo is shown as is. `static/images/icon.svg` is the navigation and footer mark, and
+Masked AutoEncoder (the label is drawn by `style.css`) and "Mae" is rebuilt halfway from masked tokens once the logo is on
+screen (hovering over or clicking the logo replays it); with reduced motion or without JavaScript it rests half
+reconstructed. `static/images/icon.svg` is the navigation and footer mark, and
 `icon_square.svg` (the SVG favicon), `favicon-32.png`, `favicon-64.png` and `apple-touch-icon.png` are the browser and
 home-screen icons. The page title and headings use the logo's typeface, Outfit (loaded from Google Fonts), and the logo's
 colours (ink `#1C2738`, orange `#F4661B`).
 
 ## arXiv link
 
-The arXiv ID is not assigned yet. Until it is, the Paper and arXiv buttons, the navigation bar's Paper link, the footer's
-arXiv link and the BibTeX entry hold a placeholder ID; a link that holds it is shown as pending (the Paper and arXiv buttons
-carry a "soon" badge) and does not navigate, with or without JavaScript. The arXiv link will be added once the paper is on arXiv: replacing the placeholder in
+The arXiv ID is not assigned yet. Until it is, the arXiv button, the footer's arXiv link and the BibTeX entry hold a
+placeholder ID; a link that holds it is shown as pending (the arXiv button carries a "soon" badge) and does not navigate,
+with or without JavaScript. The Paper button and the navigation bar's Paper link open the hosted PDF,
+`static/paper/MotionMaestro.pdf`. The arXiv link will be added once the paper is on arXiv: replacing the placeholder in
 `index.html` with the real ID is enough, and the links then work as normal links. No CSS or JavaScript file needs editing.

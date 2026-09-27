@@ -149,14 +149,15 @@
   }
 
   /* ------------------------------------------------------------------
-   * Pending links: any <a> whose href still holds the arXiv placeholder
-   * gets a "Coming soon" tip and does not navigate (family.css styles it
-   * from the href alone).  Once the placeholder in the HTML is replaced
-   * by the real ID, the links behave normally.
+   * Pending links: any <a> whose href still holds the arXiv placeholder,
+   * or that carries data-soon, gets a "Coming soon" tip and does not
+   * navigate (family.css styles it from the attributes alone).  Once the
+   * placeholder is replaced by the real ID (or data-soon is removed), the
+   * links behave normally.
    * ------------------------------------------------------------------ */
   var PLACEHOLDER = 'XXXX' + '.XXXXX';
   function initPending() {
-    $$('a[href*="' + PLACEHOLDER + '"]').forEach(function (a, i) {
+    $$('a[href*="' + PLACEHOLDER + '"], a[data-soon]').forEach(function (a, i) {
       a.classList.add('is-pending');
       a.setAttribute('aria-disabled', 'true');
       var tip = document.createElement('span');
@@ -487,6 +488,22 @@
     });
   }
 
+  /* ------------------------------------------------------------------
+   * Research-line menu  <details class="lineage-menu">: closes on an
+   * outside click and on Escape (it works without JS as a plain details).
+   * ------------------------------------------------------------------ */
+  function initLineageMenu() {
+    var menus = $$('details.lineage-menu');
+    if (!menus.length) return;
+    document.addEventListener('click', function (e) {
+      menus.forEach(function (d) { if (d.open && !d.contains(e.target)) d.open = false; });
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      menus.forEach(function (d) { if (d.open) { d.open = false; var s = $('summary', d); if (s) s.focus(); } });
+    });
+  }
+
   window.Family = {
     $: $, $$: $$, reduceMotion: reduceMotion, scrollBehavior: scrollBehavior, onReady: onReady,
     revealInRow: revealInRow, openDialog: openDialog, wireDialog: wireDialog, closeDialog: closeDialog,
@@ -501,5 +518,6 @@
     initTabs();
     initTables();
     initCopy();
+    initLineageMenu();
   });
 })();
